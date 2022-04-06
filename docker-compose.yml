@@ -20,7 +20,7 @@ services:
     container_name: pgadmin_training
     image: dpage/pgadmin4
     ports:
-    - "9090:80"
+    - "9091:80"
     volumes:
     - pgadmindata:/root/.pgadmin
     - pgadminlibdata:/var/lib/pgadmin

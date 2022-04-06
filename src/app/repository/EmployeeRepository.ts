@@ -12,6 +12,13 @@ export class EmployeeRepository extends Repository<Employee> {
         return employeeRepo.findOne(id);
     }
 
+    public async getEmployeeByUsername(username: string){
+        const employeeRepo = getConnection().getRepository(Employee);
+        const employeeDetail = await employeeRepo.findOne({
+            where: {username},
+        });
+        return employeeDetail;
+    }
     public async saveEmployeeDetails(employeeDetails: Employee) {
         const employeeRepo = getConnection().getRepository(Employee);
         return employeeRepo.save(employeeDetails);

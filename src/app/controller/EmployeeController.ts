@@ -2,6 +2,7 @@ import { NextFunction, Response } from "express";
 import multer from "multer";
 import APP_CONSTANTS from "../constants";
 import { CreateEmployeeDto } from "../dto/CreateEmployee";
+import authorize from "../middleware/authorize";
 import validationMiddleware from "../middleware/validationMiddleware";
 import { EmployeeService } from "../services/EmployeeService";
 import { AbstractController } from "../util/rest/controller";
@@ -23,6 +24,7 @@ class EmployeeController extends AbstractController {
   protected initializeRoutes = (): void => {
     this.router.get(
       `${this.path}`,
+      authorize(),
       this.asyncRouteHandler(this.getAllEmployees)
     );
     this.router.get(
@@ -42,6 +44,11 @@ class EmployeeController extends AbstractController {
     this.router.delete(
       `${this.path}/:employeeId`,
       this.asyncRouteHandler(this.deleteEmployee)
+    );
+
+    this.router.post(
+      `${this.path}/login`,
+      this.asyncRouteHandler(this.login)
     );
 
     this.router.post(
@@ -108,6 +115,17 @@ class EmployeeController extends AbstractController {
       response.status(201).send(
         this.fmt.formatResponse(data, Date.now() - request.startTime, "OK")
       );
+  }
+
+  private login= async (
+    request: RequestWithUser,
+    response: Response,
+    next: NextFunction
+  ) => {
+    const loginResponse= await this.employeeService.employeeLogin(request.body.username, request.body.password)
+    response.send(
+      this.fmt.formatResponse(loginResponse, Date.now() - request.startTime, "OK")
+    );
   }
 
   private uploadImage = async (
