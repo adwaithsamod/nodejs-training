@@ -28,6 +28,8 @@ export class EmployeeService {
                 password: employeeDetails.password ? await bcrypt.hash(employeeDetails.password, 10): '',
                 departmentId: employeeDetails.departmentId,
                 isActive: true,
+                roleId:employeeDetails.roleId,
+                addressId:employeeDetails.addressId
             });
             const save = await this.employeeRepository.saveEmployeeDetails(newEmployee);
             return save;
@@ -41,6 +43,7 @@ export class EmployeeService {
         const updatedEmployee = await this.employeeRepository.updateEmployeeDetails(employeeId, employeeDetails);
         // const updatedEmployee = await this.employeeRepository.
         //                         updateEmployeeDetailsQueryBuilder(employeeId, employeeDetails);
+        console.log(employeeDetails);
         return updatedEmployee;
 
         // //Approach 2
@@ -78,7 +81,7 @@ export class EmployeeService {
           let payload = {
             "custom:id": employeeDetails.id,
             "custom:email": employeeDetails.username,
-            "custom: role": "guest"
+            "customRole": employeeDetails.roleId
           };
           const token = this.generateAuthTokens(payload);
           return {

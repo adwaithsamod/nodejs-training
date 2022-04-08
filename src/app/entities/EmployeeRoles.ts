@@ -4,8 +4,8 @@ import { AbstractEntity } from "./AbstractEntity";
 @Entity("roles")
 export class EmployeeRoles extends AbstractEntity{
     @PrimaryGeneratedColumn("increment")
-    public role_id : string;
+    public roleId : string;
 
     @Column({nullable : false})
-    public role_name : string;
+    public roleName : string;
 }
