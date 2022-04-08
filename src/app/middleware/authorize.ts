@@ -20,6 +20,28 @@ const authorize = () => {
    }
  };
 };
+
+const authorizeCreateAndEdit = () => {
+  return async (
+    req: RequestWithUser,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const token = getTokenFromRequestHeader(req);
+      jsonwebtoken.verify(token, process.env.JWT_TOKEN_SECRET);
+      const details = (jsonwebtoken.decode(token));
+      const role = (JSON.parse(JSON.stringify(details))).customRole;
+      if(role==="admin")
+      return next();
+      else
+      return next(new UserNotAuthorizedException());
+    } catch (error) {
+      return next(new UserNotAuthorizedException());
+    }
+  };
+ };
+
 const getTokenFromRequestHeader = (req: RequestWithUser) => {
     const tokenWithBearerHeader = req.header(
       `${APP_CONSTANTS.authorizationHeader}`
@@ -29,4 +51,6 @@ const getTokenFromRequestHeader = (req: RequestWithUser) => {
     }
     return "";
    };
-export default authorize;
+
+
+export {authorize, authorizeCreateAndEdit};
